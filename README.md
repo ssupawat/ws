@@ -5,9 +5,16 @@ A small shell function for temporary workspaces. Each workspace is a folder unde
 ## Install
 
 ```sh
-git clone <this-repo> ~/ws
-echo 'source ~/ws/ws.sh' >> ~/.zshrc   # or ~/.bashrc
+curl -fsSL https://raw.githubusercontent.com/OWNER/ws/main/install.sh | sh
 ```
+
+Or from a clone:
+
+```sh
+git clone https://github.com/OWNER/ws && sh ws/install.sh
+```
+
+This copies `ws.sh` to `~/.local/share/ws` and adds one `source` line to `~/.zshrc` or `~/.bashrc`. Running it again does not duplicate the line. Set `WS_INSTALL_DIR` to change the install location.
 
 ## Usage
 
