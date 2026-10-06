@@ -46,11 +46,10 @@ check "open msg" "opened: proj" "$out"
 # 5. create with repo clone (stderr discarded: git prints its own progress)
 out=$(cd "$HOME" && ws cl "$TMP/remote.git" 2>/dev/null)
 check "clone msg" "created: cl" "$out"
-[ -n "$(ls "$BASE/cl" 2>/dev/null)" ] && cloned=yes || cloned=no
-check "clone content" "yes" "$cloned"
+check "clone dir" "yes" "$([ -d "$BASE/cl/remote" ] && echo yes || echo no)"
 
 # 6. ls lists only directories, sorted
-mkdir -p "$BASE/.hidden" "$BASE/notdir" 2>/dev/null
+mkdir -p "$BASE/.hidden" "$BASE/notdir"
 touch "$BASE/afile"
 out=$(cd "$HOME" && ws ls)
 check "ls dirs only" "$(printf 'cl\nnotdir\nproj')" "$out"

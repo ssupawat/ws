@@ -4,6 +4,7 @@
 
 ws() {
   local WS_BASE="${WS_BASE:-$HOME/.workspaces}"
+  local id
 
   if [ $# -eq 0 ]; then
     echo "Usage: ws <id> [repo...] | ws ls | ws rm <id>" >&2
@@ -24,7 +25,7 @@ ws() {
       return 0
       ;;
     rm)
-      local id=${2:-}
+      id=${2:-}
       case "$id" in ""|*/*|.|..) echo "invalid id" >&2; return 1;; esac
       [ -d "$WS_BASE/$id" ] || { echo "not found: $id" >&2; return 1; }
       case "$PWD" in "$WS_BASE/$id"*) cd "$HOME" ;; esac
@@ -33,7 +34,7 @@ ws() {
       ;;
   esac
 
-  local id=$1; shift
+  id=$1; shift
   case "$id" in */*|.|..) echo "invalid id" >&2; return 1;; esac
   local dir="$WS_BASE/$id"
 
