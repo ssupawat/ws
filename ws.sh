@@ -4,21 +4,29 @@
 
 ws() {
   local WS_BASE="${WS_BASE:-$HOME/.workspaces}"
-  mkdir -p "$WS_BASE"
+
+  if [ $# -eq 0 ]; then
+    echo "Usage: ws <id> [repo...] | ws ls | ws rm <id>" >&2
+    return 1
+  fi
 
   case "$1" in
-    "")
-      echo "Usage: ws <id> [repo...] | ws rm <id> | ws ls"
-      return 1
+    help|-h|--help)
+      echo "Usage: ws <id> [repo...] | ws ls | ws rm <id>"
+      return 0
       ;;
     ls)
-      ls -1 "$WS_BASE" 2>/dev/null
+      [ -d "$WS_BASE" ] || return 0
+      local entry
+      for entry in "$WS_BASE"/*; do
+        [ -d "$entry" ] && printf '%s\n' "${entry##*/}"
+      done
       return 0
       ;;
     rm)
-      local id=$2
-      case "$id" in ""|*/*|.|..) echo "invalid id"; return 1;; esac
-      [ -d "$WS_BASE/$id" ] || { echo "not found: $id"; return 1; }
+      local id=${2:-}
+      case "$id" in ""|*/*|.|..) echo "invalid id" >&2; return 1;; esac
+      [ -d "$WS_BASE/$id" ] || { echo "not found: $id" >&2; return 1; }
       case "$PWD" in "$WS_BASE/$id"*) cd "$HOME" ;; esac
       rm -rf "$WS_BASE/$id" && echo "deleted: $id"
       return 0
@@ -26,14 +34,20 @@ ws() {
   esac
 
   local id=$1; shift
-  case "$id" in */*|.|..) echo "invalid id"; return 1;; esac
+  case "$id" in */*|.|..) echo "invalid id" >&2; return 1;; esac
   local dir="$WS_BASE/$id"
 
   if [ ! -d "$dir" ]; then
+    local orig=$PWD
     mkdir -p "$dir" && cd "$dir" || return
     local repo
     for repo in "$@"; do
-      git clone "$repo" || { cd "$HOME"; rm -rf "$dir"; return 1; }
+      git clone "$repo" || {
+        cd "$orig"
+        rm -rf "$dir"
+        echo "clone failed: $repo (removed workspace: $id)" >&2
+        return 1
+      }
     done
     echo "created: $id"
   else

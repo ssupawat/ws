@@ -3,7 +3,7 @@
 # Remote: curl -fsSL https://raw.githubusercontent.com/OWNER/ws/main/install.sh | sh
 set -eu
 
-REPO="${WS_REPO:-OWNER/ws}"
+REPO="${WS_REPO:-ssupawat/ws}"
 DEST="${WS_INSTALL_DIR:-$HOME/.local/share/ws}"
 LINE="[ -f \"$DEST/ws.sh\" ] && . \"$DEST/ws.sh\""
 
