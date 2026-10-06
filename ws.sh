@@ -17,12 +17,15 @@ ws() {
       return 0
       ;;
     ls)
-      [ -d "$WS_BASE" ] || return 0
-      local entry
+      [ -d "$WS_BASE" ] || { echo "no workspaces"; return 0; }
+      local entry found=""
       [ -n "${ZSH_VERSION:-}" ] && setopt local_options null_glob
       for entry in "$WS_BASE"/*; do
-        [ -d "$entry" ] && printf '%s\n' "${entry##*/}"
+        [ -d "$entry" ] || continue
+        printf '%s\n' "${entry##*/}"
+        found=1
       done
+      [ -n "$found" ] || echo "no workspaces"
       return 0
       ;;
     rm)

@@ -159,14 +159,14 @@ err=$(cd "$HOME" && ws bad2 "$TMP/does-not-exist" 2>&1 1>/dev/null | grep -F 'cl
 # Assert
 check "clone-fail stderr" "clone failed: $TMP/does-not-exist (removed workspace: bad2)" "$err"
 
-# 14. empty ls: silent, rc 0, even when the base does not exist
+# 14. ls with no workspaces: "no workspaces" message, rc 0, even when the base does not exist
 # Arrange
 NB="$TMP/emptybase"
 # Act
 out=$(WS_BASE="$NB" ws ls 2>"$ERR"); rc=$?
 # Assert
 check "empty ls rc" "0" "$rc"
-check "empty ls output" "" "$out"
+check "empty ls output" "no workspaces" "$out"
 check "empty ls stderr empty" "" "$(cat "$ERR")"
 
 # 15. empty id rejected on the create path, base dir untouched
@@ -226,14 +226,15 @@ check "rm extra-args msg" "deleted: px" "$out"
 check "rm extra-args stderr empty" "" "$(cat "$ERR")"
 check "rm extra-args no 'rm' dir" "" "$([ -d "$BASE/rm" ] && echo leaked || true)"
 
-# 20. ls on an existing but empty base is silent, rc 0 (zsh nomatch regression)
+# 20. ls on an existing but empty base also says "no workspaces" (zsh nomatch regression)
 # Arrange
 mkdir -p "$TMP/emptydir"
 # Act
-out=$(WS_BASE="$TMP/emptydir" ws ls 2>&1); rc=$?
+out=$(WS_BASE="$TMP/emptydir" ws ls 2>"$ERR"); rc=$?
 # Assert
 check "empty dir ls rc" "0" "$rc"
-check "empty dir ls output" "" "$out"
+check "empty dir ls output" "no workspaces" "$out"
+check "empty dir ls stderr empty" "" "$(cat "$ERR")"
 
 echo "---"
 [ -n "${ZSH_VERSION:-}" ] && mode=zsh || mode=bash
