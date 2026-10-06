@@ -1,0 +1,6 @@
+#!/bin/sh
+# pre-push: run the full test suite in both shells; abort the push on failure.
+set -e
+cd "$(git rev-parse --show-toplevel)"
+bash test-ws.sh
+zsh test-ws.sh

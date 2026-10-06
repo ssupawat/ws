@@ -46,3 +46,9 @@ Run the test suite (uses a local git remote, no network):
 bash test-ws.sh
 zsh test-ws.sh
 ```
+
+A pre-push hook runs both suites automatically; enable it once with:
+
+```sh
+git config core.hooksPath hooks
+```
