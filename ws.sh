@@ -4,7 +4,7 @@
 
 ws() {
   local WS_BASE="${WS_BASE:-$HOME/.workspaces}"
-  local WS_VERSION="0.3.0"
+  local WS_VERSION="0.4.0"
   local id
 
   # colours only on a terminal; NO_COLOR (any value) disables them
