@@ -123,6 +123,23 @@ unset -f rm
 check "rm failure rc" "1" "$rc"
 command rm -rf "$BASE/locked"
 
+# 17. rm must not fall through to the create path
+out=$(cd "$HOME" && ws rmx 2>/dev/null >/dev/null; ws proj 2>/dev/null); rc=$?
+# (create proj fresh for this check)
+mkdir -p "$BASE/proj"
+err=$(cd "$HOME" && ws rm proj 2>&1 1>/dev/null); rc=$?
+check "rm rc 0" "0" "$rc"
+check "rm stderr empty" "" "$err"
+check "rm no 'rm' workspace created" "" "$([ -d "$BASE/rm" ] && echo leaked || true)"
+check "rm pwd untouched" "$HOME" "$PWD"
+
+# 18. rm with extra args still deletes, never creates a workspace named 'rm'
+mkdir -p "$BASE/px"
+out=$(cd "$HOME" && ws rm px "$TMP/remote.git" 2>/dev/null); rc=$?
+check "rm extra-args rc" "0" "$rc"
+check "rm extra-args msg" "deleted: px" "$out"
+check "rm extra-args no 'rm' dir" "" "$([ -d "$BASE/rm" ] && echo leaked || true)"
+
 echo "---"
 [ -n "${ZSH_VERSION:-}" ] && mode=zsh || mode=bash
 echo "shell=$mode pass=$pass fail=$fail"

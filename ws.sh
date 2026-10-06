@@ -30,6 +30,7 @@ ws() {
       [ -d "$WS_BASE/$id" ] || { echo "not found: $id" >&2; return 1; }
       case "$PWD" in "$WS_BASE/$id"|"$WS_BASE/$id"/*) cd "$HOME" ;; esac
       rm -rf "$WS_BASE/$id" && echo "deleted: $id"
+      return
       ;;
   esac
 
