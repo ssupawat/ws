@@ -4,7 +4,7 @@
 
 ws() {
   local WS_BASE="${WS_BASE:-$HOME/.workspaces}"
-  local WS_VERSION="0.2.0"
+  local WS_VERSION="0.3.0"
   local id
 
   if [ $# -eq 0 ]; then
