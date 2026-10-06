@@ -226,6 +226,15 @@ check "rm extra-args msg" "deleted: px" "$out"
 check "rm extra-args stderr empty" "" "$(cat "$ERR")"
 check "rm extra-args no 'rm' dir" "" "$([ -d "$BASE/rm" ] && echo leaked || true)"
 
+# 20. ls on an existing but empty base is silent, rc 0 (zsh nomatch regression)
+# Arrange
+mkdir -p "$TMP/emptydir"
+# Act
+out=$(WS_BASE="$TMP/emptydir" ws ls 2>&1); rc=$?
+# Assert
+check "empty dir ls rc" "0" "$rc"
+check "empty dir ls output" "" "$out"
+
 echo "---"
 [ -n "${ZSH_VERSION:-}" ] && mode=zsh || mode=bash
 echo "shell=$mode pass=$pass fail=$fail"

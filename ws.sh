@@ -19,6 +19,7 @@ ws() {
     ls)
       [ -d "$WS_BASE" ] || return 0
       local entry
+      [ -n "${ZSH_VERSION:-}" ] && setopt local_options null_glob
       for entry in "$WS_BASE"/*; do
         [ -d "$entry" ] && printf '%s\n' "${entry##*/}"
       done
