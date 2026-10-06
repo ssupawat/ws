@@ -104,6 +104,25 @@ out=$(WS_BASE="$TMP/emptybase" ws ls 2>/dev/null); rc=$?
 check "empty ls rc" "0" "$rc"
 check "empty ls output" "" "$out"
 
+# 14. empty id rejected on the create path, base dir untouched
+out=$(cd "$HOME" && ws "" 2>&1); rc=$?
+check "empty id msg" "invalid id" "$out"
+check "empty id rc" "1" "$rc"
+
+# 15. rm only moves you to $HOME when inside the deleted workspace, not a prefix sibling
+mkdir -p "$BASE/foo" "$BASE/foo2"
+cd "$BASE/foo2" && ws rm foo >/dev/null 2>&1
+check "rm prefix sibling pwd" "$BASE/foo2" "$PWD"
+cd "$HOME"; rm -rf "$BASE/foo2"
+
+# 16. rm propagates failure from rm -rf
+mkdir -p "$BASE/locked"
+rm() { return 1; }
+ws rm locked >/dev/null 2>&1; rc=$?
+unset -f rm
+check "rm failure rc" "1" "$rc"
+command rm -rf "$BASE/locked"
+
 echo "---"
 [ -n "${ZSH_VERSION:-}" ] && mode=zsh || mode=bash
 echo "shell=$mode pass=$pass fail=$fail"
