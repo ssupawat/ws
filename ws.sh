@@ -28,14 +28,13 @@ ws() {
       id=${2:-}
       case "$id" in ""|*/*|.|..) echo "invalid id" >&2; return 1;; esac
       [ -d "$WS_BASE/$id" ] || { echo "not found: $id" >&2; return 1; }
-      case "$PWD" in "$WS_BASE/$id"*) cd "$HOME" ;; esac
+      case "$PWD" in "$WS_BASE/$id"|"$WS_BASE/$id"/*) cd "$HOME" ;; esac
       rm -rf "$WS_BASE/$id" && echo "deleted: $id"
-      return 0
       ;;
   esac
 
   id=$1; shift
-  case "$id" in */*|.|..) echo "invalid id" >&2; return 1;; esac
+  case "$id" in ""|*/*|.|..) echo "invalid id" >&2; return 1;; esac
   local dir="$WS_BASE/$id"
 
   if [ ! -d "$dir" ]; then
