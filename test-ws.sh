@@ -236,6 +236,20 @@ check "empty dir ls rc" "0" "$rc"
 check "empty dir ls output" "no workspaces" "$out"
 check "empty dir ls stderr empty" "" "$(cat "$ERR")"
 
+# 21. version: prints "ws <semver>", rc 0; -v and --version are aliases
+# Act
+out=$(ws version 2>"$ERR"); rc=$?
+# Assert
+if echo "$out" | grep -Eq '^ws [0-9]+\.[0-9]+\.[0-9]+$'; then is_semver=yes; else is_semver=no; fi
+check "version rc" "0" "$rc"
+check "version format" "yes" "$is_semver"
+check "version stderr empty" "" "$(cat "$ERR")"
+# Act (aliases)
+out_v=$(ws -v); out_2=$(ws --version)
+# Assert
+check "version alias -v" "$out" "$out_v"
+check "version alias --version" "$out" "$out_2"
+
 echo "---"
 [ -n "${ZSH_VERSION:-}" ] && mode=zsh || mode=bash
 echo "shell=$mode pass=$pass fail=$fail"

@@ -4,6 +4,7 @@
 
 ws() {
   local WS_BASE="${WS_BASE:-$HOME/.workspaces}"
+  local WS_VERSION="0.2.0"
   local id
 
   if [ $# -eq 0 ]; then
@@ -12,6 +13,10 @@ ws() {
   fi
 
   case "$1" in
+    version|-v|--version)
+      echo "ws $WS_VERSION"
+      return 0
+      ;;
     help|-h|--help)
       echo "Usage: ws <id> [repo...] | ws ls | ws rm <id>"
       return 0
