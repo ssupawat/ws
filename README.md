@@ -1,6 +1,12 @@
 # ws
 
-A small shell function for temporary workspaces. Each workspace is a folder under `~/.workspaces`, optionally pre-filled with cloned repos.
+A disposable directory for work that does not have a home yet. Each workspace is a folder under `~/.workspaces`, optionally pre-filled with cloned repos. It manages directories, not repos or tasks.
+
+Use it when:
+
+- work spans two repos, but the agent can only open inside one of them
+- there is no repo yet, and you want to start with the agent before creating one
+- it is a one-time job: no repos, or one clone, deleted when you are done
 
 ## Install
 
