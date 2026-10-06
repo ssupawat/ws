@@ -28,10 +28,19 @@ ws help             # show usage
 ## Behavior
 
 - If a clone fails during creation, the whole workspace is removed and you are returned to the directory you started in.
-- `ws rm` moves you to `$HOME` first if you are inside the workspace being deleted.
-- Ids containing `/`, or the ids `.` and `..`, are rejected (a dot inside an id like `foo.bar` is allowed).
-- Errors and usage go to stderr.
+- `ws rm` moves you to `$HOME` first if you are inside the workspace being deleted (or one of its subdirectories) — not when you are in a workspace whose name merely shares a prefix.
+- The empty id, ids containing `/`, and the ids `.` and `..` are rejected (a dot inside an id like `foo.bar` is allowed).
+- Errors and usage go to stderr; failures exit non-zero.
 - `ws ls` and `ws rm` never create the base directory; only `ws <id>` does.
 - Set `WS_BASE` to change the base directory.
 
 Works in bash and zsh.
+
+## Development
+
+Run the test suite (uses a local git remote, no network):
+
+```sh
+bash test-ws.sh
+zsh test-ws.sh
+```
