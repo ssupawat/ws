@@ -35,6 +35,7 @@ ws version          # show version
 - Errors and usage go to stderr; failures exit non-zero.
 - `ws ls` and `ws rm` never create the base directory; only `ws <id>` does.
 - Set `WS_BASE` to change the base directory.
+- Messages are prefixed with `✓` / `→` / `✗`; colors appear only on a terminal and respect `NO_COLOR`.
 
 Works in bash and zsh.
 

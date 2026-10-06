@@ -52,7 +52,7 @@ rm -rf "$BASE/proj"
 # Act
 out=$(cd "$HOME" && ws proj 2>"$ERR" && pwd)
 # Assert
-check "create msg+pwd" "$(printf 'created: proj\n%s' "$BASE/proj")" "$out"
+check "create msg+pwd" "$(printf '✓ created: proj\n%s' "$BASE/proj")" "$out"
 check "create stderr empty" "" "$(cat "$ERR")"
 
 # 4. open existing: cds into it
@@ -61,7 +61,7 @@ mkdir -p "$BASE/proj"
 # Act
 out=$(cd "$HOME" && ws proj 2>"$ERR" && pwd)
 # Assert
-check "open msg+pwd" "$(printf 'opened: proj\n%s' "$BASE/proj")" "$out"
+check "open msg+pwd" "$(printf '→ opened: proj\n%s' "$BASE/proj")" "$out"
 
 # 5. create with repos: clones each into the workspace
 # Arrange
@@ -69,7 +69,7 @@ rm -rf "$BASE/cl"
 # Act
 out=$(cd "$HOME" && ws cl "$TMP/remote.git" 2>/dev/null)
 # Assert
-check "clone msg" "created: cl" "$out"
+check "clone msg" "✓ created: cl" "$out"
 check "clone dir" "yes" "$([ -d "$BASE/cl/remote" ] && echo yes || echo no)"
 
 # 6. ls: directories only, sorted, no dot-dirs, no files
@@ -102,7 +102,7 @@ for bad in "a/b" "." ".."; do
   # Assert
   check "invalid id '$bad' rc" "1" "$rc"
   check "invalid id '$bad' stdout empty" "" "$out"
-  check "invalid id '$bad' stderr" "invalid id" "$(cat "$ERR")"
+  check "invalid id '$bad' stderr" "✗ invalid id" "$(cat "$ERR")"
 done
 
 # 9. dot inside an id is allowed
@@ -123,12 +123,12 @@ out=$(cd "$HOME" && ws rm nope 2>"$ERR"); rc=$?
 # Assert
 check "rm missing rc" "1" "$rc"
 check "rm missing stdout empty" "" "$out"
-check "rm missing stderr" "not found: nope" "$(cat "$ERR")"
+check "rm missing stderr" "✗ not found: nope" "$(cat "$ERR")"
 # Act
 out=$(cd "$HOME" && ws rm 2>"$ERR"); rc=$?
 # Assert (would crash under set -u before the ${2:-} fix)
 check "rm no id rc" "1" "$rc"
-check "rm no id stderr" "invalid id" "$(cat "$ERR")"
+check "rm no id stderr" "✗ invalid id" "$(cat "$ERR")"
 
 # 11. rm from inside the workspace: deletes, moves the real shell to $HOME
 # Arrange
@@ -138,7 +138,7 @@ cd "$BASE/proj"
 ws rm proj > "$TMP/msg" 2>"$ERR"; rc=$?
 # Assert
 check "rm rc" "0" "$rc"
-check "rm msg" "deleted: proj" "$(cat "$TMP/msg")"
+check "rm msg" "✓ deleted: proj" "$(cat "$TMP/msg")"
 check "rm from inside pwd" "$HOME" "$PWD"
 check "rm removed" "" "$(ls "$BASE" | grep proj || true)"
 
@@ -157,7 +157,7 @@ rm -rf "$BASE/bad2"
 # Act
 err=$(cd "$HOME" && ws bad2 "$TMP/does-not-exist" 2>&1 1>/dev/null | grep -F 'clone failed:')
 # Assert
-check "clone-fail stderr" "clone failed: $TMP/does-not-exist (removed workspace: bad2)" "$err"
+check "clone-fail stderr" "✗ clone failed: $TMP/does-not-exist (removed workspace: bad2)" "$err"
 
 # 14. ls with no workspaces: "no workspaces" message, rc 0, even when the base does not exist
 # Arrange
@@ -176,7 +176,7 @@ NB="$TMP/nobase2"
 out=$(cd "$HOME" && ws "" 2>"$ERR"); rc=$?
 # Assert
 check "empty id rc" "1" "$rc"
-check "empty id stderr" "invalid id" "$(cat "$ERR")"
+check "empty id stderr" "✗ invalid id" "$(cat "$ERR")"
 check "empty id stdout empty" "" "$out"
 
 # 16. rm only moves you to $HOME when inside the deleted workspace, not a prefix sibling
@@ -211,7 +211,7 @@ out=$(ws rm proj >"$TMP/msg" 2>"$ERR"); rc=$?
 # Assert
 check "rm rc 0" "0" "$rc"
 check "rm stderr empty" "" "$(cat "$ERR")"
-check "rm stdout" "deleted: proj" "$(cat "$TMP/msg")"
+check "rm stdout" "✓ deleted: proj" "$(cat "$TMP/msg")"
 check "rm no 'rm' workspace created" "" "$([ -d "$BASE/rm" ] && echo leaked || true)"
 check "rm pwd untouched" "$HOME" "$PWD"
 
@@ -222,7 +222,7 @@ mkdir -p "$BASE/px"
 out=$(cd "$HOME" && ws rm px "$TMP/remote.git" 2>"$ERR"); rc=$?
 # Assert
 check "rm extra-args rc" "0" "$rc"
-check "rm extra-args msg" "deleted: px" "$out"
+check "rm extra-args msg" "✓ deleted: px" "$out"
 check "rm extra-args stderr empty" "" "$(cat "$ERR")"
 check "rm extra-args no 'rm' dir" "" "$([ -d "$BASE/rm" ] && echo leaked || true)"
 
