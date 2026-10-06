@@ -1,6 +1,6 @@
 #!/bin/sh
 # Install ws: copy ws.sh to ~/.local/share/ws and source it from your shell rc.
-# Remote: curl -fsSL https://raw.githubusercontent.com/OWNER/ws/main/install.sh | sh
+# Remote: curl -fsSL https://raw.githubusercontent.com/ssupawat/ws/main/install.sh | sh
 set -eu
 
 REPO="${WS_REPO:-ssupawat/ws}"
